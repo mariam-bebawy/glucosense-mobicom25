@@ -2,5 +2,5 @@ regression_nmsl_39/*.npy
 
 regression_nmsl_39/Models/*
 
-regression_nmsl_39/Experiment/*.fmap
-regression_nmsl_39/Experiment/*.npy
+# regression_nmsl_39/Experiment/*.fmap
+# regression_nmsl_39/Experiment/*.npy
