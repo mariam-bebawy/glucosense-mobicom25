@@ -1,0 +1,43 @@
+# Google Pixel 
+# Pytorch MLP
+
+2025-02-23 21:26:34 - Preparing data...
+2025-02-23 21:26:34 - len(hyper) of Mobile dataset:1383
+2025-02-23 21:26:34 - len(label) of Mobile dataset:1383
+2025-02-23 21:33:02 - len(hyper) of Mobile dataset:363
+2025-02-23 21:33:02 - len(label) of Mobile dataset:363
+2025-02-23 21:35:14 - Shape of X_train: (5852925, 50)
+2025-02-23 21:35:14 - Shape of y_train: (5852925,)
+2025-02-23 21:35:14 - Shape of X_test: (1530035, 50)
+2025-02-23 21:35:14 - Shape of y_test: (1530035,)
+2025-02-23 21:35:25 - Model fitting...
+2025-02-24 01:49:32 - Average ARD: 0.13992740213871002
+2025-02-24 01:49:33 - Done
+
+# Google Pixel 
+# Sklearn MLP2025-02-24
+2025-02-24 11:21:57 - Preparing data...
+2025-02-24 11:21:57 - len(hyper) of Mobile dataset:1383
+2025-02-24 11:21:57 - len(label) of Mobile dataset:1383
+2025-02-24 11:29:08 - len(hyper) of Mobile dataset:363
+2025-02-24 11:29:08 - len(label) of Mobile dataset:363
+2025-02-24 11:30:43 - Shape of X_train: (5852925, 50)
+2025-02-24 11:30:43 - Shape of y_train: (5852925,)
+2025-02-24 11:30:43 - Shape of X_test: (1530035, 50)
+2025-02-24 11:30:43 - Shape of y_test: (1530035,)
+2025-02-24 11:30:52 - Model fitting...
+2025-02-24 13:37:39 - Done
+
+# Google Pixel
+# Pytorch VGG
+2025-02-25 12:03:11 - Preparing data...
+2025-02-25 12:03:11 - len(hyper) of Mobile dataset:1383
+2025-02-25 12:03:11 - len(label) of Mobile dataset:1383
+2025-02-25 12:45:37 - len(hyper) of Mobile dataset:363
+2025-02-25 12:45:37 - len(label) of Mobile dataset:363
+2025-02-25 12:54:25 - Shape of X_train: (1383, 50, 64, 64)
+2025-02-25 12:54:25 - Shape of y_train: (1383,)
+2025-02-25 12:54:25 - Shape of X_test: (363, 50, 64, 64)
+2025-02-25 12:54:25 - Shape of y_test: (363,)
+2025-02-25 12:54:25 - Model fitting...
+2025-08-16 04:19:31 - Done
