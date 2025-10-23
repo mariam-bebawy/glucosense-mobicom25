@@ -4,7 +4,8 @@ regression_nmsl_39/*.log
 
 regression_nmsl_39/Models/*.pkl
 regression_nmsl_39/Models/*.pth
+regression_nmsl_39/Models/*
 
 regression_nmsl_39/Experiment/*.fmap
 regression_nmsl_39/Experiment/*.npy
-regression_nmsl_39/Experiment/*
+# regression_nmsl_39/Experiment/*
