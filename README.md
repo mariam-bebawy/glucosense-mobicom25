@@ -1,4 +1,2 @@
-# glucosense_regression
+# GlucoSense: Non-Invasive Blood Glucose Sensing on Mobile Devices  
 
-- regression_nmsl_39 : on Anson's system.  
-- regression_nmsl_59 : on Neha's system.  
