@@ -2,6 +2,8 @@ regression_nmsl_39/*.npy
 
 regression_nmsl_39/Models/*
 
+regression_nmsl_59/*
+
 pretrained_models/*
 
 reconstruction/train/exp/*
