@@ -1,4 +1,4 @@
-old_files/*
+old_files
 *__pychache__
 *.pyc
 *.ipynb_checkpoints
@@ -7,6 +7,7 @@ old_files/*
 *.pth
 pretrained_models/*
 regression/Models/*
+reconstruction/evaluate_mobile/Models/*
 
 # ignore redundant data files
 regression/graph/s1/*

@@ -10,195 +10,181 @@ This repository describes the detailed steps to reproduce the research results p
 
 <span style="font-size:9px"><sup>3</sup> Qatar Computing Research Institute, Qatar</span>
 
-## Overview
+## 💡 Overview
 
 GlucoSense enables regular blood glucose monitoring using only smartphones, leveraging mobile RGB and NIR cameras, hyperspectral reconstruction, and machine learning models. 
 It is designed to work with unmodified phones and achieves clinically acceptable accuracy as demonstrated by comparison with an FDA-approved glucose monitoring device in a user study.
 
 ### Core Components
 
-- **HyperSpectral Reconstruction:** Transforms RGB/NIR images into informative spectral bands using a deep learning model, focusing on the most relevant bands for glucose prediction.
-- **Glucose Estimation:** Uses XGBoost regression to estimate blood glucose levels from reconstructed spectral bands.
+- **Mobile Sensing:** Leverages the standard RGB camera and the near-infrared (NIR) sensors (e.g., depth-sensing cameras like Time-of-Flight) available on modern smartphones.  
+- **HyperSpectral Reconstruction:** A deep learning model converts the sparse RGB/NIR inputs into 50 crucial spectral bands (400–1000 nm), focusing on wavelengths proven most important for glucose detection (S4.2 in the paper).  
+- **Glucose Estimation:** An XGBoost regression model maps the reconstructed spectral bands to the final blood glucose level (mg/dL).  
+
+### Key Results
+
+In an ethics-approved user study comparing GlucoSense against an FDA-approved CGM device (FreeStyle Libre 2), GlucoSense achieved the following clinical accuracy (RGB+NIR system):
+
+- **Clarke Error Grid (CEG):** 80.4% in Zone A (Clinically Accurate) and 19.3% in Zone B (Clinically Acceptable).  
+- **Surveillance Error Grid (SEG):** 99.7% of predictions were within the None and Slight risk zones.  
 
 
-## Installation Instructions
+
+## 💻 Installation Instructions
 
 ### Prerequisites
-- Workstation running Linux
-- NVIDIA GPU + CUDA CuDNN
-- Python Anaconda (Python version 3.8 or earlier) 
+- Workstation running **Linux**
+- **NVIDIA GPU + CUDA CuDNN** (required for training and inference with the reconstruction model)
+- Python Anaconda (**Python version 3.8** is recommended)
 
 ### Install the code to an new environment  
 
-1. Download miniconda from https://docs.conda.io/en/latest/miniconda.html  (Choose Linux Python 3.8)
-
-2. Install miniconda:
-
+1. Download miniconda (Linux Python 3.8) from the official website and install it: https://docs.conda.io/en/latest/miniconda.html  
 ```bash
 bash Miniconda3-py38_23.5.2-0-Linux-x86_64.sh
 ```
 
-
-3. Clone the following repo, create Anaconda environment, and install [Pytorch](https://pytorch.org/get-started/previous-versions/) & other dependencies:
-
+2. Clone the repository, create the Anaconda environment, and install dependencies:
 ```bash
-git clone https://github.com/mariam-bebawy/glucosense-mobicom25.git
+git clone [https://github.com/mariam-bebawy/glucosense-mobicom25.git](https://github.com/mariam-bebawy/glucosense-mobicom25.git)
 cd glucosense-mobicom25
-conda create glucosense
+conda create --name glucosense python=3.8
 conda activate glucosense
+
+# Install Pytorch and other dependencies
+# Ensure you match the PyTorch version to your CUDA version if training or using GPU
+pip install torch==1.8.1+cu111 -f [https://download.pytorch.org/whl/torch_stable.html](https://download.pytorch.org/whl/torch_stable.html)
 pip install -r requirements.txt
 ```
 
-
-4. Install pytorch & dependencies
-  ```bash
-  pip install torch==1.8.1+cu111 -f https://download.pytorch.org/whl/torch_stable.html
-  pip install -r requirements.txt
- ```
-
-
-After installation, the directory structure should look like:
+### Repository Structure
 
 ```bash
-   |--mobicom23_mobispectral
-      |--reconstruction
-      |--classification
-      |--application 
-      |--datasets
-      |--pretrained_models
-  
+glucosense/
+├── datasets/             # Holds the GlucoSense User Study Dataset (after download)
+├── reconstruction/       # Code for the HyperSpectral Reconstruction Model
+│   ├── train/
+│   ├── test/             # Test reconstruction accuracy against ground truth HSI
+│   └── evaluate_mobile/  # Apply HSI reconstruction to mobile camera data (RGB+NIR, etc.)
+├── regression/           # Code for the Glucose Estimation Model (XGBoost, SVR, etc.)
+│   ├── Architecture/
+│   └── ... 
+├── pretrained_models/    # Location for pre-trained models (Reconstruction & Regression)
+├── LICSENSE
+└── README.md
 ```
-The datasets and pretrained_models folders are initially empty. 
 
-### Download datasets
-- There are five datasets for different fruits: apple, kiwi, tomato, blueberries, and strawberries. Each is named as ``dataset_{fruit}``, e.g., ``dataset_kiwi``. 
-- The directory structure of the datasets looks like: 
-  ```bash
-   |--datasets
-      |--dataset_kiwi
-          |--reconstruction (Ground Truth Hyperspectral data, paired to RGB+NIR)
-          |--mobile_data (Paired RGB+NIR mobile images, two classes organic/non-organic)
-          |--classification (Reconstructed hyperspectral images from mobile images)
-       |--dataset_apple
-          |--...
-      ... 
-  ```
-- To evaluate the reconstruction mode, you will need to download one or more of the following five datasets:
+## 🧪 Training and Testing Reconstruction (Optional)  
 
-     - [kiwi](https://drive.google.com/file/d/1PHsMs3TtQYg-VmhrJKfy-jzplUgHNDWx/view) (2.6 GB)
-  
-    - [blueberries](https://drive.google.com/file/d/1PF-yzTW3ao6ZACLPlOeO_Z-qiUkBcxz3/view) (1.9 GB)
+This section details how to train the HyperSpectral Reconstruction model from scratch and verify its accuracy against the HSI ground truth.  
 
-    - [apple](https://drive.google.com/file/d/1PFiOQtyRwSCSV6gIpfZ9beoyWQDgsZN1/view) (19.0 GB)
-    
-    - [tomato](https://drive.google.com/file/d/1PELLiBpeNmgrQHDeuWdWWvCMfBt4dk9r/view) (1.7 GB)
-  
-    - [strawberries](https://drive.google.com/file/d/1PI5505giSb4LLBTVCMvT318wWONPkJEZ/view) (2.0 GB)
+### 1. Training the Reconstruction Model from Scratch  
 
-- Unzip the downloaded dataset(s) and move it (them) to the datasets folder. Please note that additional storage (similar in size to the downloaded dataset) will be needed to reproduce the reconstruction results.
-   
-- You can also download [all datasets together](https://doi.org/10.20383/103.0811) (27 GB). 
+To train the MST++ model on the Human Study Hyperspectral Image (HSI) dataset (as detailed in SA.1 of the paper), run the following command.
 
- 
-### Reproduce the reconstruction results using the pre-trained model
-- Download the pretrained model [here](https://drive.google.com/file/d/1P7LcvEvrV-8Mr-QzyuqN9v5f5jzyb_a-/view) (about 250 MB).
-- Move the .zip file to the ```mobicom23_mobispectral/``` folder and unzip it there.
-- Test the reconstruction model on the kiwi dataset as follows: 
-```bash
-cd reconstruction/test
-# test on kiwi dataset 
-python3 test.py --data_root ../../datasets/dataset_kiwi/reconstruction/  --method mst_plus_plus --pretrained_model_path ../../pretrained_models/mst_apple_kiwi_blue_68ch.pth --outf ./exp/hs_inference_kiwi/  --gpu_id 0
-```
-- Here, the pretrained model produces the inference on the test partition of the kiwi dataset and computes multiple performance metrics to compare against the ground truth hyperspectral data.
-- Inferenced images (```.mat``` format) are saved at path ```./exp/hs_inference_kiwi/```.
-- The following performance metrics are printed: MRAE, RMSE, SAM, SID, SSIM, and PSNR (These are the ones reported in Table 1 in the paper). 
-- Similarly, you can repeat the process for other fruits (e.g. blueberries, apple).
-```bash
-# test on apple dataset 
-python3 test.py --data_root ../../datasets/dataset_apple/reconstruction/  --method mst_plus_plus --pretrained_model_path ../../pretrained_models/mst_apple_kiwi_blue_68ch.pth --outf ./exp/hs_inference_apple/  --gpu_id 0
-# test on blueberries dataset 
-python3 test.py --data_root ../../datasets/dataset_blueberries/reconstruction/  --method mst_plus_plus --pretrained_model_path ../../pretrained_models/mst_apple_kiwi_blue_68ch.pth --outf ./exp/hs_inference_blueberries/  --gpu_id 0
-```
-### Transfer learning 
-Here, we show the evaluation of ``dataset_tomato`` with and without transfer learning (Reported in Table 2). 
-```bash
-# test on tomato dataset without transfer learning
-python3 test.py --data_root ../../datasets/dataset_tomato/reconstruction/  --method mst_plus_plus --pretrained_model_path ../../pretrained_models/mst_apple_kiwi_blue_68ch.pth --outf ./exp/hs_inference_tomato/  --gpu_id 0
-# test on tomato dataset with transfer learning
-python3 test.py --data_root ../../datasets/dataset_tomato/reconstruction/  --method mst_plus_plus --pretrained_model_path ../../pretrained_models/mst_tomato_transfer_68ch.pth --outf ./exp/hs_inference_tomato/  --gpu_id 0
-```
-- Repeat the process for ``dataset_strawberries``
+Note: This process is computationally intensive and may take several hours depending on your GPU.
 
-### Training the reconstruction model from scratch
-- This may take several hours, depending on the GPU.
-- To train the model on three fruits (apples, kiwis, and blueberries):
 ```bash
 cd reconstruction/train
-python3 train.py --method mst_plus_plus --batch_size 20 --end_epoch 100 --init_lr 4e-4 --outf ./exp/mst_apple_kiwi_blue/ --data_root1 ../../datasets/dataset_apple/reconstruction/ --data_root2 ../../datasets/dataset_kiwi/reconstruction/ --data_root3 ../../datasets/dataset_blueberries/reconstruction/ --patch_size 64 --stride 64 --gpu_id 0
-```
+# This trains the model on the HSI data for the 23 participants used in the training split.
 
-## Identification of Organic Fruits
-- We use the trained reconstruction model to reconstruct hyperspectral bands from RGB & NIR images captured by a mobile phone (Google Pixel 4 XL).
-- Then, we feed the reconstructed hyperspectral bands to a classifier to distinguish organic fruits from non-organic ones. 
+python3 train.py --method mst_plus_plus \
+    --data_root ../../../datasets/HSDatasets/ \
+    --outf ./exp/mst_glucosense_run/ \
+    --batch_size 64 \
+    --end_epoch 100 \
+    --init_lr 4e-4 \
+    --patch_size 64 \
+    --stride 64 \
+    --gpu_id 0
+```  
+*The resulting model checkpoint will be saved in the specified output directory (./exp/mst_glucosense_run/).*  
 
-### Hyperspectral reconstruction of the mobile image dataset 
-- The organic/non-organic mobile data is at ```dataset_kiwi/mobile_data/```.
+### 2. Testing Reconstruction Accuracy  
+
+To test the accuracy of a trained model against the HSI ground truth data (Table 3 in the paper) on the 8-participant test split:
+
+```bash
+cd reconstruction/test
+# Use either your newly trained model or the provided pre-trained model path.
+
+python3 train.py --method mst_plus_plus \
+    --data_root ../../../datasets/HSDatasets/ \
+    --method mst_plus_plus \
+    --pretrained_model_path ../evaluation_mobile/Models/mst_AWB_940_t50.pth \
+    --outf ../../../datasets/HSDatasets/rec_50/  \
+    --gpu_id 0
+```  
+*The performance metrics (RMSE, SAM, SID, PSNR) will be printed to the console.*  
+
+
+## 💾 Reproducing Results  
+
+### 1. Download Datasets  
+
+- **GlucoSense User Study Dataset:** The necessary data for reproduction—consisting of hyperspectral (HSI) images for reconstruction model training and paired mobile images from the 31 participants for validation across the four hardware systems—is required and available as an open-source data package [here](https://1sfu-my.sharepoint.com/:f:/g/personal/mba216_sfu_ca/Es8O3o3jPJRIi5OqAWj9RvAB09bnrEoC5fG7hKq5tYWBqA?e=tKHyBK).
+
+- Unzip the downloaded dataset and place the contents (e.g., `HSDatasets/` and `MobileDatasets/` splits) into the `datasets/` folder.
+
+### 2. Download Pre-trained Models
+
+You will need the pre-trained models for the reconstruction and glucose estimation steps.
+
+- **Pre-trained Reconstruction Model:** Download the model file (e.g., `mst_AWB_940_t50.pth`) here. Place it in the `reconstruction/Models/` folder.
+
+- **Pre-trained Glucose Estimation Models:** The trained XGBoost regression models for each imaging system (e.g., `xgboost_onsemi.pkl`) should be downloaded and placed in the `regression/Models/` folder.
+
+### 3. Execution Steps (RGB+NIR System)
+
+The following sequence of commands demonstrates how to use the pre-trained models to predict glucose levels using the mobile image test set, focusing on the RGB+NIR system (the one corresponding to the unmodified Google Pixel phone).
+
+#### A. Apply HyperSpectral Reconstruction to Mobile Data  
+
+This step simulates the reconstruction of the 50 spectral bands from the sparse RGB/NIR test images.  
+
 ```bash
 cd reconstruction/evaluate_mobile
-# reconstruct organic kiwi
-python3 test.py --data_root ../../datasets/dataset_kiwi/mobile_data/organic/  --method mst_plus_plus --pretrained_model_path ../../pretrained_models/mst_apple_kiwi_blue_68ch.pth --outf ../../datasets/dataset_kiwi/classification/working_organic/  --gpu_id 0
-# reconstruct non-organic kiwi
-python3 test.py --data_root ../../datasets/dataset_kiwi/mobile_data/nonorganic/  --method mst_plus_plus --pretrained_model_path ../../pretrained_models/mst_apple_kiwi_blue_68ch.pth --outf ../../datasets/dataset_kiwi/classification/working_nonorganic/  --gpu_id 0
-```
-- The reconstructed data is stored at ```dataset_kiwi/classification/```.
+# Assuming the human study mobile images are organized under datasets/human_study/
+# The output folder will contain the reconstructed spectral bands (.mat files).
 
-### Organic classification
-- We classify the organic and non-organic fruits using the reconstructed bands from the RGB + NIR images captured by the phone.
-
-```bash 
-cd classification
-# inference on pretrained model kiwi
-python3 evaluate.py --data_root ../datasets/dataset_kiwi/classification/ --fruit kiwi --pretrained_classifier ../pretrained_models/MLP_kiwi.pkl
-
-# classify organic vs non-organic kiwi
-python3 classify.py --data_root ../datasets/dataset_kiwi/classification/ --fruit kiwi
+python3 test.py --data_root ../../datasets/human_study/mobile_data/RGB+NIR/ \
+    --method mst_plus_plus \
+    --pretrained_model_path ../../pretrained_models/mst_AWB_940_t50.pth \
+    --outf ../../datasets/human_study/reconstructed_bands/RGB+NIR/  \
+    --gpu_id 0
 ```
 
-- Similarly, repeat the process for other fruits (e.g., apple)
+#### B. Predict Glucose Levels
+
+This step feeds the reconstructed bands into the glucose estimation model and runs the full evaluation against the reference CGM data.
+
 ```bash
-cd reconstruction/evaluate_mobile
-# reconstruct organic apple
-python3 test.py --data_root ../../datasets/dataset_apple/mobile_data/organic/  --method mst_plus_plus --pretrained_model_path ../../pretrained_models/mst_apple_kiwi_blue_68ch.pth --outf ../../datasets/dataset_apple/classification/working_organic/  --gpu_id 0
-# reconstruct non-organic apple
-python3 test.py --data_root ../../datasets/dataset_apple/mobile_data/nonorganic/  --method mst_plus_plus --pretrained_model_path ../../pretrained_models/mst_apple_kiwi_blue_68ch.pth --outf ../../datasets/dataset_apple/classification/working_nonorganic/  --gpu_id 0
-```
-```bash
-cd classification
-# inference
-python3 evaluate.py --data_root ../datasets/dataset_apple/classification/ --fruit apple --pretrained_classifier ../pretrained_models/MLP_apple.pkl
-# classify organic vs non-organic apple
-python3 classify.py --data_root ../datasets/dataset_apple/classification/ --fruit apple
-```
+cd regression/Architecture
+# This script loads the reconstructed bands and the XGBoost model to output the CEG/SEG analysis.
 
-## Mobile Application [[link](https://github.com/mobispectral/MobiSpectral-Android)]
-
-## Citation
-If you use our code or dataset for your research, please cite our paper.
+python3 main.py
 ```
-@inproceedings{10.1145/3570361.3613296,
-author = {Sharma, Neha and Waseem, Muhammad Shahzaib and Mirzaei, Shahrzad and Hefeeda, Mohamed},
-title = {MobiSpectral: Hyperspectral Imaging on Mobile Devices},
-year = {2023},
-isbn = {9781450399906},
+*The output metrics will include the MARD, and the zone percentages for the Clarke and Consensus/Surveillance Error Grids, matching the results in $\S$6.4 of the paper.*  
+
+## 📝 Citation
+
+If you use our code or dataset for your research, please cite our paper:
+
+```
+@inproceedings{10.1145/3680207.3723472,
+author = {Sharma, Neha and Bebawy, Mariam and Ng, Yik Yu and Hefeeda, Mohamed},
+title = {GlucoSense: Non-Invasive Glucose Monitoring using Mobile Devices},
+year = {2025},
+isbn = {},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3570361.3613296},
-doi = {10.1145/3570361.3613296},
-booktitle = {Proceedings of the 29th Annual International Conference on Mobile Computing and Networking},
-articleno = {82},
-numpages = {15},
-keywords = {mobile applications, food fraud, hyperspectral imaging},
-location = {Madrid, Spain},
-series = {ACM MobiCom '23}
+url = {[https://doi.org/10.1145/3680207.3723472](https://doi.org/10.1145/3680207.3723472)},
+doi = {10.1145/3680207.3723472},
+booktitle = {Proceedings of the 31st Annual International Conference on Mobile Computing and Networking},
+articleno = {},
+numpages = {},
+keywords = {blood glucose, mobile health, hyperspectral imaging},
+location = {Hong Kong, China},
+series = {ACM MobiCom '25}
 }
-```
+```  
