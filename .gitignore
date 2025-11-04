@@ -1,1 +1,16 @@
+<<<<<<< HEAD
 old_files/*
+=======
+regression_nmsl_39/*.npy
+
+regression_nmsl_39/Models/*
+
+regression_nmsl_59/*
+
+pretrained_models/*
+
+reconstruction/train/exp/*
+reconstruction/test/exp/*
+reconstruction/evaluate_mobile/exp/*
+reconstruction/test/*.mat
+>>>>>>> 90d29ad703b259bf13ad9a3e5b828cd08964dbbd
