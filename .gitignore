@@ -1,1 +1,15 @@
 old_files/*
+*__pychache__
+*.pyc
+*.ipynb_checkpoints
+
+# ignore model files
+*.pth
+pretrained_models/*
+regression/Models/*
+
+# ignore redundant data files
+regression/graph/s1/*
+regression/graph/s2/*
+regression/graph/s1_s2/*
+regression/graph/models/*
