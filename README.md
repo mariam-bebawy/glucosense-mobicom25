@@ -130,9 +130,9 @@ python3 train.py --method mst_plus_plus \
 
 You will need the pre-trained models for the reconstruction and glucose estimation steps.
 
-- **Pre-trained Reconstruction Model:** Download the model file (e.g., `mst_AWB_940_t50.pth`) here. Place it in the `reconstruction/Models/` folder.
+- **Pre-trained Reconstruction Model:** Download the model files (e.g., `mst_AWB_940_t50.pth`) [here](https://1sfu-my.sharepoint.com/:f:/r/personal/mba216_sfu_ca/Documents/GlucoSense_MobiCom25/Pretrained%20Models/Reconstruction?csf=1&web=1&e=JObLaU). Place it in the `reconstruction/Models/` folder.
 
-- **Pre-trained Glucose Estimation Models:** The trained XGBoost regression models for each imaging system (e.g., `xgboost_onsemi.pkl`) should be downloaded and placed in the `regression/Models/` folder.
+- **Pre-trained Glucose Estimation Models:** The trained XGBoost regression models for each imaging system (e.g., `xgboost_onsemi.pkl`) should be downloaded from [here](https://1sfu-my.sharepoint.com/:f:/r/personal/mba216_sfu_ca/Documents/GlucoSense_MobiCom25/Pretrained%20Models/Regression?csf=1&web=1&e=xdbAu3) and placed in the `regression/Models/` folder.
 
 ### 3. Execution Steps (RGB+NIR System)
 
