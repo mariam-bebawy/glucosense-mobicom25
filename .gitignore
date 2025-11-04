@@ -1,10 +1,1 @@
-regression_nmsl_39/*.npy
-
-regression_nmsl_39/Models/*
-
-pretrained_models/*
-
-reconstruction/train/exp/*
-reconstruction/test/exp/*
-reconstruction/evaluate_mobile/exp/*
-reconstruction/test/*.mat
+old_files/*
