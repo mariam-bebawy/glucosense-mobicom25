@@ -2,6 +2,7 @@ old_files
 *__pychache__
 *.pyc
 *.ipynb_checkpoints
+environment_full.yml
 
 # ignore model files
 *.pth

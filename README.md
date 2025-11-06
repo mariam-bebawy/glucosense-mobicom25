@@ -44,6 +44,20 @@ In an ethics-approved user study comparing GlucoSense against an FDA-approved CG
 bash Miniconda3-py38_23.5.2-0-Linux-x86_64.sh
 ```
 
+2. Clone the repository and set up the environment using the provided `environment.yml` file:
+```bash
+# Clone the repository
+git clone [https://github.com/mariam-bebawy/glucosense-mobicom25.git](https://github.com/mariam-bebawy/glucosense-mobicom25.git)
+cd glucosense-mobicom25
+
+# Create the 'glucosense' environment and install all dependencies
+conda env create -f environment.yml
+
+# Activate the newly created environment
+conda activate glucosense
+```
+
+<!-- 
 2. Clone the repository, create the Anaconda environment, and install dependencies:
 ```bash
 git clone [https://github.com/mariam-bebawy/glucosense-mobicom25.git](https://github.com/mariam-bebawy/glucosense-mobicom25.git)
@@ -55,7 +69,7 @@ conda activate glucosense
 # Ensure you match the PyTorch version to your CUDA version if training or using GPU
 pip install torch==1.8.1+cu111 -f [https://download.pytorch.org/whl/torch_stable.html](https://download.pytorch.org/whl/torch_stable.html)
 pip install -r requirements.txt
-```
+``` -->
 
 ### Repository Structure
 
