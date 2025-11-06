@@ -1,6 +1,6 @@
 # GlucoSense: Non-Invasive Blood Glucose Sensing on Mobile Devices  
 This repository describes the detailed steps to reproduce the research results presented in the paper titled: 
-[``GlucoSense: Non-Invasive Blood Glucose Sensing on Mobile Devices``](https://doi.org/10.1145/3680207.3723472) published in ACM MobiCom'25. 
+[``GlucoSense: Non-Invasive Blood Glucose Sensing on Mobile Devices``](https://www.cs.sfu.ca/~mhefeeda/Papers/mobicom25_GlucoSense.pdf) published in ACM MobiCom'25. 
 
 *[Neha Sharma](https://www.linkedin.com/in/sharma-neha512/)*<sup>1</sup>, *[Mariam Bebawy](https://www.linkedin.com/in/mariam-bebawy/)*<sup>1</sup>, *[Yik Yu Ng](https://www.linkedin.com/in/yik-yu-ng-7847b62a7/)*<sup>2</sup>, and *[Mohamed Hefeeda](https://www.linkedin.com/in/mohamed-hefeeda-71a5445/)*<sup>1,3</sup>  
 
